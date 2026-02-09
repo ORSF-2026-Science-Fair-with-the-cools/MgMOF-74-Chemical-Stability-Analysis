@@ -23,6 +23,8 @@ center_point = 0.5 * (pos_mg1 + pos_mg9)
 # Rotate accoridngly
 tfsi = read('ntf2_pack.xyz')
 
+tfsi.translate(-tfsi.get_center_of_mass())
+
 offsets = [
     np.array([0.0, 0.0, 0.0]),
     np.array([0.0, 0.0, 4.0])
@@ -70,20 +72,19 @@ while added < n_solvent and attempts < 5000:
     if not too_close(dme_try, mof):
         mof.extend(dme_try)
         added += 1
+
+print("Solvent placement finished")
+
 # Define a region that solvent sould not appear
 # Randomly generate a certain amount of solvent around the simulation box
 # If the molecule is touching the MOF, generate a new positon
 # Loop until all molecules of solvent are added
-added = 0
-while added < n_solvent:
-    # Generate random position within cell boundaries
-    cell_dims = mof.get_cell().lengths()
-    rand_pos = np.random.rand(3) * cell_dims
 
 # Perform an energy minimization to relax the solution
 # Output the relaxed system to an xyz file for analysis
 write('system_initial.xyz', mof)
 print(f"Successfully added {added} solvent molecules.")
 view(mof)
+
 
 
