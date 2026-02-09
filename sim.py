@@ -12,6 +12,7 @@ for atom in mof:
     print(atom.index, atom.symbol, atom.position)
 
 # Use 2 atoms (Mg #1 and Mg #9) as a reference for center coordinates and then center inside based on another elements position (Mg #0)
+pos_mg0 = mof[0].position
 pos_mg1 = mof[1].position
 pos_mg9 = mof[9].position
 center_point = 0.5 * (pos_mg1 + pos_mg9)
@@ -83,3 +84,4 @@ while added < n_solvent:
 write('system_initial.xyz', mof)
 print(f"Successfully added {added} solvent molecules.")
 view(mof)
+
