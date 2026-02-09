@@ -1,4 +1,5 @@
 # Dependencies (ase)
+import numpy as np
 from ase.io import read, write
 from ase.build import molecule
 from ase.visualize import view
@@ -84,4 +85,5 @@ while added < n_solvent:
 write('system_initial.xyz', mof)
 print(f"Successfully added {added} solvent molecules.")
 view(mof)
+
 
