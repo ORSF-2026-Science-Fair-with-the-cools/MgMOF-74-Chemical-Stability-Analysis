@@ -14,21 +14,30 @@ for atom in mof:
 # Use 2 atoms (Mg #1 and Mg #10) as a reference for center coordinates
 pos_mg1 = mof[1].position
 pos_mg10 = mof[10].position
-center_point = 0.5 * (pos_mg1 + pos_mg10)
+pos_mg14 = mof[14].position
+pos_mg5 = mof[5].position
+center_points = [0.5 * (pos_mg1 + pos_mg10),
+                 0.5 * (pos_mg14 + pos_mg5)]
 
 # Read TFSI anion from the ntf2_pack.xyz file
 tfsi = read('ntf2_pack.xyz')
 
 tfsi.translate(-tfsi.get_center_of_mass())
 
-off = np.array([0.0, 0.0, -1.0]) # Offset in order to center the anion
+offsets = [np.array([0.0, 0.0, -1.0]),
+           np.array([0.0, 0.0, 1.0])] # Offsets in order to center the anion
+
+rotations = [np.array([120, 0, -25]), 
+             np.array([0, -20, 65])]
 
 # Add the TFSI anion inside the MOF pores (2 anions)
-tfsi_copy = tfsi.copy()
-tfsi_copy.rotate(-25, 'z') # Rotate accordingly
-tfsi_copy.rotate(120, 'x')
-tfsi_copy.translate(center_point + off)
-mof.extend(tfsi_copy)
+for i in range(2):
+    tfsi_copy = tfsi.copy()
+    tfsi_copy.rotate(rotations[i][2], 'z') # Rotate accordingly
+    tfsi_copy.rotate(rotations[i][1], 'y')
+    tfsi_copy.rotate(rotations[i][0], 'x')
+    tfsi_copy.translate(center_points[i] + offsets[i])
+    mof.extend(tfsi_copy)
 
 # Place Li cations near the Mg sites in the MOF
 # Li should be lined up near the Nitrogen on the anion for proper bonding
@@ -79,5 +88,4 @@ mof.extend(tfsi_copy)
 #write('system_initial.xyz', mof)
 #print(f"Successfully added {added} solvent molecules.")
 view(mof)
-
 
