@@ -1,5 +1,6 @@
 # Dependencies (ase)
 import numpy as np
+from ase import Atom
 from ase.io import read, write
 from ase.build import molecule
 from ase.visualize import view
@@ -41,7 +42,21 @@ for i in range(2):
 
 # Place Li cations near the Mg sites in the MOF
 # Li should be lined up near the Nitrogen on the anion for proper bonding
-# Base position based on the Mg site and Nitrogen
+# Base position based on the Mg site and Nitrogen (Mg #1, Mg #4 and N #167, N #182)
+pos_n167 = mof[167].position
+pos_n182 = mof[182].position
+pos_mg4 = mof[4].position
+
+ion_offsets = [np.array([0.5, -1.0, 0.0]),
+               np.array([-0.25, 1.0, 0.0])]
+
+ion_positions = [0.5 * (pos_mg1 + pos_n167),
+                 0.5 * (pos_mg4 + pos_n182)]
+
+Li1 = Atom("Li", position=(ion_positions[0] + ion_offsets[0]), charge=1)
+Li2 = Atom("Li", position=(ion_positions[1] + ion_offsets[1]), charge=1)
+mof.extend(Li1)
+mof.extend(Li2)
 
 # Sourround the MOF with DME solvent (CH3OCH3)
 #dme = molecule('CH3OCH3')
