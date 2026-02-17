@@ -4,9 +4,11 @@ from ase import Atom
 from ase.io import read, write
 from ase.build import molecule
 from ase.visualize import view
+from ase.geometry import get_distances
 
 # Add a MOF into the simulation through reading the .cif file
 mof = read('MgMOF-74.cif')
+mof.rotate(29, 'z')
 
 # Find the center of the MOF's pores in order to add the TFSI anion
 for atom in mof:
@@ -59,48 +61,27 @@ mof.extend(Li1)
 mof.extend(Li2)
 
 # Sourround the MOF with DME solvent (CH3OCH3)
-#dme = molecule('CH3OCH3')
-#dme.translate(-dme.get_center_of_mass())
+dme = molecule('CH3OCH3')
+dme.translate(-dme.get_center_of_mass())
 
-#n_solvent = 20
-#min_dist = 2.0
-#cell = mof.get_cell().lengths()
+#Define region at which solvent can be placed
+rangeX = [-22, 22]
+rangeY = [-1.5, 27]
+rangeZ = [-5.5, 12.5]
 
-#def too_close(mol, system):
-    #for a in mol:
-        #for b in system:
-            #if np.linalg.norm(a.position - b.position) < min_dist:
-                #return True
-    #return False
+#define minimum distance (angstroms) and # of molecules as well as number of attempts before giving up
+n_solvent = 20
+min_dist = 1.2
+attempts = 5
 
-#added = 0
-#attempts = 0
-
-#while added < n_solvent and attempts < 5000:
-    #attempts += 1
-
-    #dme_try = dme.copy()
-    #dme_try.rotate(np.random.uniform(0, 360), 'x')
-    #dme_try.rotate(np.random.uniform(0, 360), 'y')
-    #dme_try.rotate(np.random.uniform(0, 360), 'z')
-
-    #rand_pos = np.random.rand(3) * cell
-    #dme_try.translate(rand_pos)
-
-    #if not too_close(dme_try, mof):
-        #mof.extend(dme_try)
-        #added += 1
-
-#print("Solvent placement finished")
-
-# Define a region that solvent sould not appear
-# Randomly generate a certain amount of solvent around the simulation box
-# If the molecule is touching the MOF, generate a new positon
-# Loop until all molecules of solvent are added
+#For each molecule
+#for i in range(n_solvent):
+#    for x in range(attempts):
+#        #Place at random position and rotation within range
+#        #If it is too close, retry (up to 5 times)
 
 # Perform an energy minimization to relax the solution
 # Output the relaxed system to an xyz file for analysis
 #write('system_initial.xyz', mof)
 #print(f"Successfully added {added} solvent molecules.")
 view(mof)
-
