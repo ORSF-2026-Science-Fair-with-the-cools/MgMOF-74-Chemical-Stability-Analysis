@@ -90,9 +90,11 @@ for i in range(n_solvent):
         mof.extend(new_solvent)
 
         if(){ # check if the solvent is touching anything
-            # if it is, break
-            # otherwise, delete and restart
+            break
         }
+        if(attempts <= 0):
+            print("Failed to place solvent")
+            break
         attempts -= 1
 
 
