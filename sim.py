@@ -70,15 +70,31 @@ rangeY = [-1.5, 27]
 rangeZ = [-5.5, 12.5]
 
 #define minimum distance (angstroms) and # of molecules as well as number of attempts before giving up
-n_solvent = 20
+n_solvent = 10
 min_dist = 1.2
 attempts = 5
 
 #For each molecule
-#for i in range(n_solvent):
-#    for x in range(attempts):
-#        #Place at random position and rotation within range
-#        #If it is too close, retry (up to 5 times)
+for i in range(n_solvent):
+    attempts = 5
+    
+    for x in range(attempts):
+        #Place at random position and rotation within range
+        #If it is too close, retry (up to 5 times)
+        new_solvent = dme.copy()
+        new_solvent.rotate(np.random.uniform(0, 360), 'x')
+        new_solvent.rotate(np.random.uniform(0, 360), 'y')
+        new_solvent.rotate(np.random.uniform(0, 360), 'z')
+
+        new_solvent.translate([np.random.uniform(rangeX[0], rangeX[1]), np.random.uniform(rangeY[0], rangeY[1]), np.random.uniform(rangeZ[0], rangeZ[1])])
+        mof.extend(new_solvent)
+
+        if(){ # check if the solvent is touching anything
+            # if it is, break
+            # otherwise, delete and restart
+        }
+        attempts -= 1
+
 
 # Perform an energy minimization to relax the solution
 # Output the relaxed system to an xyz file for analysis
